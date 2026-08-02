@@ -52,10 +52,12 @@ public partial class GameRenderer : Node3D
 		_time += delta;
 
 		_testObject.Position = new Vector3(
-			Mathf.Sin((float)_time) * 3.0f,
-			Mathf.Sin((float)_time * 1.5f) * 2.0f,
-			-(Mathf.Sin((float)_time * 1.2f) * 3.0f) - 8.0f
+			2.0f,
+			3.0f,
+			-10.0f
 		);
+		
+		_camera.Roll = Mathf.Sin((float)_time * 5.0f) * 0.2f;
 
 		ProjectedPoint? projected = ProjectToScreen(_testObject.Position);
 
@@ -71,6 +73,33 @@ public partial class GameRenderer : Node3D
 	private ProjectedPoint? ProjectToScreen(Vector3 worldPosition)
 	{
 		Vector3 relative = worldPosition - _camera.Position;
+		
+		float cosYaw = Mathf.Cos(-_camera.Yaw);
+		float sinYaw = Mathf.Sin(-_camera.Yaw);
+
+		relative = new Vector3(
+			relative.X * cosYaw - relative.Z * sinYaw,
+			relative.Y,
+			relative.X * sinYaw + relative.Z * cosYaw
+		);
+		
+		float cosPitch = Mathf.Cos(-_camera.Pitch);
+		float sinPitch = Mathf.Sin(-_camera.Pitch);
+
+		relative = new Vector3(
+			relative.X,
+			relative.Y * cosPitch - relative.Z * sinPitch,
+			relative.Y * sinPitch + relative.Z * cosPitch
+		);
+		
+		float cosRoll = Mathf.Cos(-_camera.Roll);
+		float sinRoll = Mathf.Sin(-_camera.Roll);
+
+		relative = new Vector3(
+			relative.X * cosRoll - relative.Y * sinRoll,
+			relative.X * sinRoll + relative.Y * cosRoll,
+			relative.Z
+		);
 
 		if (relative.Z >= 0.0f)
 			return null;
