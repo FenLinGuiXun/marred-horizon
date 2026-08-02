@@ -53,17 +53,22 @@ public partial class GameRenderer : Node3D
 
 		_testObject.Position = new Vector3(
 			Mathf.Sin((float)_time) * 3.0f,
-			0.0f,
-			-10.0f
+			Mathf.Sin((float)_time * 1.5f) * 2.0f,
+			-(Mathf.Sin((float)_time * 1.2f) * 3.0f) - 8.0f
 		);
 
-		Vector2? screenPosition = ProjectToScreen(_testObject.Position);
+		ProjectedPoint? projected = ProjectToScreen(_testObject.Position);
 
-		if (screenPosition.HasValue)
-			_resources?.ClearColorTexture(screenPosition.Value);
+		if (projected.HasValue)
+		{
+			_resources?.ClearColorTexture(
+				projected.Value.ScreenPosition,
+				projected.Value.Depth
+			);
+		}
 	}
 	
-	private Vector2? ProjectToScreen(Vector3 worldPosition)
+	private ProjectedPoint? ProjectToScreen(Vector3 worldPosition)
 	{
 		Vector3 relative = worldPosition - _camera.Position;
 
@@ -81,6 +86,9 @@ public partial class GameRenderer : Node3D
 			RenderResources.Height / 2.0f -
 			relative.Y / depth * focalLength;
 
-		return new Vector2(screenX, screenY);
+		return new ProjectedPoint(
+			new Vector2(screenX, screenY),
+			depth
+		);
 	}
 }

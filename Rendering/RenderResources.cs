@@ -23,7 +23,7 @@ public sealed class RenderResources
 		CreateClearUniformSet();
 	}
 	
-	public void ClearColorTexture(Vector2 objectPosition)
+	public void ClearColorTexture(Vector2 objectPosition, float depth)
 	{
 		var computeList = Device.ComputeListBegin();
 
@@ -41,10 +41,12 @@ public sealed class RenderResources
 		float[] pushValues =
 		{
 			objectPosition.X,
-			objectPosition.Y
+			objectPosition.Y,
+			depth,
+			0.0f
 		};
 
-		byte[] pushData = new byte[8];
+		byte[] pushData = new byte[16];
 
 		Buffer.BlockCopy(
 			pushValues,
