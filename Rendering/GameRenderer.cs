@@ -14,6 +14,9 @@ public partial class GameRenderer : Node3D
 
 		_device = RenderingServer.GetRenderingDevice();
 		_resources = new RenderResources(_device);
+		
+		_resources = new RenderResources(_device);
+		_resources.ClearColorTexture();
 
 		_displayTexture = new Texture2Drd
 		{

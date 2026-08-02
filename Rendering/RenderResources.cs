@@ -10,6 +10,8 @@ public sealed class RenderResources
 	
 	public Rid ClearShader { get; private set; }
 	public Rid ClearPipeline { get; private set; }
+	
+	public Rid ClearUniformSet { get; private set; }
 
 	public RenderResources(RenderingDevice device)
 	{
@@ -17,6 +19,32 @@ public sealed class RenderResources
 		
 		CreateColorTexture();
 		CreateClearPipeline();
+		CreateClearUniformSet();
+	}
+	
+	public void ClearColorTexture()
+	{
+		var computeList = Device.ComputeListBegin();
+
+		Device.ComputeListBindComputePipeline(
+			computeList,
+			ClearPipeline
+		);
+
+		Device.ComputeListBindUniformSet(
+			computeList,
+			ClearUniformSet,
+			0
+		);
+
+		Device.ComputeListDispatch(
+			computeList,
+			40,
+			23,
+			1
+		);
+
+		Device.ComputeListEnd();
 	}
 
 	private void CreateColorTexture()
@@ -47,5 +75,22 @@ public sealed class RenderResources
 
 		ClearShader = Device.ShaderCreateFromSpirV(shaderSpirV);
 		ClearPipeline = Device.ComputePipelineCreate(ClearShader);
+	}
+	
+	private void CreateClearUniformSet()
+	{
+		var outputUniform = new RDUniform
+		{
+			UniformType = RenderingDevice.UniformType.Image,
+			Binding = 0
+		};
+
+		outputUniform.AddId(ColorTexture);
+
+		ClearUniformSet = Device.UniformSetCreate(
+			new Godot.Collections.Array<RDUniform> { outputUniform },
+			ClearShader,
+			0
+		);
 	}
 }
