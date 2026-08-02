@@ -1,4 +1,5 @@
 using Godot;
+using System;
 
 public sealed class RenderResources
 {
@@ -22,7 +23,7 @@ public sealed class RenderResources
 		CreateClearUniformSet();
 	}
 	
-	public void ClearColorTexture()
+	public void ClearColorTexture(Vector2 objectPosition)
 	{
 		var computeList = Device.ComputeListBegin();
 
@@ -35,6 +36,28 @@ public sealed class RenderResources
 			computeList,
 			ClearUniformSet,
 			0
+		);
+
+		float[] pushValues =
+		{
+			objectPosition.X,
+			objectPosition.Y
+		};
+
+		byte[] pushData = new byte[8];
+
+		Buffer.BlockCopy(
+			pushValues,
+			0,
+			pushData,
+			0,
+			pushData.Length
+		);
+
+		Device.ComputeListSetPushConstant(
+			computeList,
+			pushData,
+			(uint)pushData.Length
 		);
 
 		Device.ComputeListDispatch(

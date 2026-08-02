@@ -18,8 +18,6 @@ public partial class GameRenderer : Node3D
 		_device = RenderingServer.GetRenderingDevice();
 		_resources = new RenderResources(_device);
 		
-		_resources = new RenderResources(_device);
-		
 		_camera = new RenderCamera
 		{
 			Position = Vector3.Zero,
@@ -49,7 +47,10 @@ public partial class GameRenderer : Node3D
 	
 	public override void _Process(double delta)
 	{
-		_resources?.ClearColorTexture();
+		Vector2? screenPosition = ProjectToScreen(_testObject.Position);
+
+		if (screenPosition.HasValue)
+			_resources?.ClearColorTexture(screenPosition.Value);
 	}
 	
 	private Vector2? ProjectToScreen(Vector3 worldPosition)
