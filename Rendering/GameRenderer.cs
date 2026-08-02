@@ -11,6 +11,8 @@ public partial class GameRenderer : Node3D
 	private RenderCamera _camera;
 	private RenderObject _testObject;
 	
+	private double _time;
+	
 	public override void _Ready()
 	{
 		_renderOutput = GetNode<TextureRect>("../Display/RenderOutput");
@@ -47,6 +49,14 @@ public partial class GameRenderer : Node3D
 	
 	public override void _Process(double delta)
 	{
+		_time += delta;
+
+		_testObject.Position = new Vector3(
+			Mathf.Sin((float)_time) * 3.0f,
+			0.0f,
+			-10.0f
+		);
+
 		Vector2? screenPosition = ProjectToScreen(_testObject.Position);
 
 		if (screenPosition.HasValue)
