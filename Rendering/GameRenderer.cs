@@ -27,4 +27,9 @@ public partial class GameRenderer : Node3D
 
 		GD.Print("GPU texture connected");
 	}
+	
+	public override void _ExitTree()
+	{
+		_resources?.Dispose();
+	}
 }

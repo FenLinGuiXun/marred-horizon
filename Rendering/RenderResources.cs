@@ -93,4 +93,18 @@ public sealed class RenderResources
 			0
 		);
 	}
+	public void Dispose()
+	{
+		if (ClearUniformSet.IsValid)
+			Device.FreeRid(ClearUniformSet);
+
+		if (ClearPipeline.IsValid)
+			Device.FreeRid(ClearPipeline);
+
+		if (ClearShader.IsValid)
+			Device.FreeRid(ClearShader);
+
+		if (ColorTexture.IsValid)
+			Device.FreeRid(ColorTexture);
+	}
 }
