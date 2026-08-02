@@ -7,11 +7,16 @@ public sealed class RenderResources
 
 	public RenderingDevice Device { get; }
 	public Rid ColorTexture { get; private set; }
+	
+	public Rid ClearShader { get; private set; }
+	public Rid ClearPipeline { get; private set; }
 
 	public RenderResources(RenderingDevice device)
 	{
 		Device = device;
+		
 		CreateColorTexture();
+		CreateClearPipeline();
 	}
 
 	private void CreateColorTexture()
@@ -30,5 +35,17 @@ public sealed class RenderResources
 			format,
 			new RDTextureView()
 		);
+	}
+	
+	private void CreateClearPipeline()
+	{
+		var shaderFile = GD.Load<RDShaderFile>(
+			"res://Rendering/Shaders/clear_color.glsl"
+		);
+
+		var shaderSpirV = shaderFile.GetSpirV();
+
+		ClearShader = Device.ShaderCreateFromSpirV(shaderSpirV);
+		ClearPipeline = Device.ComputePipelineCreate(ClearShader);
 	}
 }
