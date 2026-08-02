@@ -1,5 +1,7 @@
 [gd_scene format=3 uid="uid://cdn4i3bxqmvts"]
 
+[ext_resource type="Script" uid="uid://bws6k5en6g1s0" path="res://Rendering/GameRenderer.cs" id="1_o5qli"]
+
 [node name="Main" type="Node2D" unique_id=1078466232]
 
 [node name="Display" type="CanvasLayer" parent="." unique_id=1971139530]
@@ -10,3 +12,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+
+[node name="Renderer" type="Node3D" parent="." unique_id=1701680354]
+script = ExtResource("1_o5qli")
