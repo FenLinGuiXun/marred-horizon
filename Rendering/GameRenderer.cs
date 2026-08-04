@@ -24,7 +24,9 @@ public partial class GameRenderer : Node3D
 		{
 			Position = Vector3.Zero,
 			Yaw = 0.0f,
-			Pitch = 0.0f
+			Pitch = 0.0f,
+			Roll = 0.0f,
+			FieldOfView = 70.0f
 		};
 
 		_testObject = new RenderObject
@@ -105,7 +107,11 @@ public partial class GameRenderer : Node3D
 			return null;
 
 		float depth = -relative.Z;
-		float focalLength = RenderResources.Width / 2.0f;
+		float fieldOfViewRadians = Mathf.DegToRad(_camera.FieldOfView);
+
+		float focalLength =
+			(RenderResources.Width / 2.0f) /
+			Mathf.Tan(fieldOfViewRadians / 2.0f);
 
 		float screenX =
 			RenderResources.Width / 2.0f +
