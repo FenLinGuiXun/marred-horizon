@@ -9,31 +9,30 @@ public sealed class RenderResources
 	public RenderingDevice Device { get; }
 	public Rid ColorTexture { get; private set; }
 	
-	public Rid ClearShader { get; private set; }
-	public Rid ClearPipeline { get; private set; }
-	
-	public Rid ClearUniformSet { get; private set; }
+	public Rid SpriteShader { get; private set; }
+	public Rid SpritePipeline { get; private set; }
+	public Rid SpriteUniformSet { get; private set; }
 
 	public RenderResources(RenderingDevice device)
 	{
 		Device = device;
 		
 		CreateColorTexture();
-		CreateClearPipeline();
+		CreateSpritePipeline();
 	}
 	
-	public void ClearColorTexture(Vector2 objectPosition, float depth)
+	public void DrawSprite(Vector2 objectPosition, float depth)
 	{
 		var computeList = Device.ComputeListBegin();
 
 		Device.ComputeListBindComputePipeline(
 			computeList,
-			ClearPipeline
+			SpritePipeline
 		);
 
 		Device.ComputeListBindUniformSet(
 			computeList,
-			ClearUniformSet,
+			SpriteUniformSet,
 			0
 		);
 
@@ -89,19 +88,19 @@ public sealed class RenderResources
 		);
 	}
 	
-	private void CreateClearPipeline()
+	private void CreateSpritePipeline()
 	{
 		var shaderFile = GD.Load<RDShaderFile>(
-			"res://Rendering/Shaders/clear_color.glsl"
+			"res://Rendering/Shaders/draw_sprite.glsl"
 		);
 
 		var shaderSpirV = shaderFile.GetSpirV();
 
-		ClearShader = Device.ShaderCreateFromSpirV(shaderSpirV);
-		ClearPipeline = Device.ComputePipelineCreate(ClearShader);
+		SpriteShader = Device.ShaderCreateFromSpirV(shaderSpirV);
+		SpritePipeline = Device.ComputePipelineCreate(SpriteShader);
 	}
 	
-	public void CreateClearUniformSet(Rid spriteTexture)
+	public void CreateSpriteUniformSet(Rid spriteTexture)
 	{
 		var outputUniform = new RDUniform
 		{
@@ -128,26 +127,26 @@ public sealed class RenderResources
 		spriteUniform.AddId(sampler);
 		spriteUniform.AddId(spriteTexture);
 
-		ClearUniformSet = Device.UniformSetCreate(
+		SpriteUniformSet = Device.UniformSetCreate(
 			new Godot.Collections.Array<RDUniform>
 			{
 				outputUniform,
 				spriteUniform
 			},
-			ClearShader,
+			SpriteShader,
 			0
 		);
 	}
 	public void Dispose()
 	{
-		if (ClearUniformSet.IsValid)
-			Device.FreeRid(ClearUniformSet);
+		if (SpriteUniformSet.IsValid)
+			Device.FreeRid(SpriteUniformSet);
 
-		if (ClearPipeline.IsValid)
-			Device.FreeRid(ClearPipeline);
+		if (SpritePipeline.IsValid)
+			Device.FreeRid(SpritePipeline);
 
-		if (ClearShader.IsValid)
-			Device.FreeRid(ClearShader);
+		if (SpriteShader.IsValid)
+			Device.FreeRid(SpriteShader);
 
 		if (ColorTexture.IsValid)
 			Device.FreeRid(ColorTexture);

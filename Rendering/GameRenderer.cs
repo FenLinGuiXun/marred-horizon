@@ -27,7 +27,7 @@ public partial class GameRenderer : Node3D
 			"res://Assets/Sprites/test_object.png"
 		);
 		
-		_resources.CreateClearUniformSet(_testSprite.Texture);
+		_resources.CreateSpriteUniformSet(_testSprite.Texture);
 		
 		_camera = new RenderCamera
 		{
@@ -74,7 +74,7 @@ public partial class GameRenderer : Node3D
 
 		if (projected.HasValue)
 		{
-			_resources?.ClearColorTexture(
+			_resources?.DrawSprite(
 				projected.Value.ScreenPosition,
 				projected.Value.Depth
 			);

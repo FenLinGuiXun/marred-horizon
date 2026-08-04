@@ -3,12 +3,12 @@
 importer="glsl"
 type="RDShaderFile"
 uid="uid://0ws7aa8c6gw"
-path="res://.godot/imported/clear_color.glsl-27979906eda0254a787b961716627148.res"
+path="res://.godot/imported/draw_sprite.glsl-6385338accb72ed8ebd4252482c75c63.res"
 
 [deps]
 
-source_file="res://Rendering/Shaders/clear_color.glsl"
-dest_files=["res://.godot/imported/clear_color.glsl-27979906eda0254a787b961716627148.res"]
+source_file="res://Rendering/Shaders/draw_sprite.glsl"
+dest_files=["res://.godot/imported/draw_sprite.glsl-6385338accb72ed8ebd4252482c75c63.res"]
 
 [params]
 
