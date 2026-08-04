@@ -13,12 +13,21 @@ public partial class GameRenderer : Node3D
 	
 	private double _time;
 	
+	private SpriteTexture _testSprite;
+	
 	public override void _Ready()
 	{
 		_renderOutput = GetNode<TextureRect>("../Display/RenderOutput");
 
 		_device = RenderingServer.GetRenderingDevice();
 		_resources = new RenderResources(_device);
+		
+		_testSprite = new SpriteTexture(
+			_device,
+			"res://Assets/Sprites/test_object.png"
+		);
+		
+		_resources.CreateClearUniformSet(_testSprite.Texture);
 		
 		_camera = new RenderCamera
 		{
@@ -46,6 +55,7 @@ public partial class GameRenderer : Node3D
 	
 	public override void _ExitTree()
 	{
+		_testSprite?.Dispose();
 		_resources?.Dispose();
 	}
 	
@@ -54,12 +64,11 @@ public partial class GameRenderer : Node3D
 		_time += delta;
 
 		_testObject.Position = new Vector3(
-			2.0f,
-			3.0f,
-			-10.0f
+			Mathf.Sin((float)_time) * 3.0f,
+			Mathf.Sin((float)_time * 1.5f) * 5.0f,
+			-60.0f
 		);
 		
-		_camera.Roll = Mathf.Sin((float)_time * 5.0f) * 0.2f;
 
 		ProjectedPoint? projected = ProjectToScreen(_testObject.Position);
 

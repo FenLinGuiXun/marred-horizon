@@ -20,7 +20,6 @@ public sealed class RenderResources
 		
 		CreateColorTexture();
 		CreateClearPipeline();
-		CreateClearUniformSet();
 	}
 	
 	public void ClearColorTexture(Vector2 objectPosition, float depth)
@@ -102,7 +101,7 @@ public sealed class RenderResources
 		ClearPipeline = Device.ComputePipelineCreate(ClearShader);
 	}
 	
-	private void CreateClearUniformSet()
+	public void CreateClearUniformSet(Rid spriteTexture)
 	{
 		var outputUniform = new RDUniform
 		{
@@ -112,8 +111,29 @@ public sealed class RenderResources
 
 		outputUniform.AddId(ColorTexture);
 
+		var spriteUniform = new RDUniform
+		{
+			UniformType = RenderingDevice.UniformType.SamplerWithTexture,
+			Binding = 1
+		};
+
+		var samplerState = new RDSamplerState
+		{
+			MinFilter = RenderingDevice.SamplerFilter.Nearest,
+			MagFilter = RenderingDevice.SamplerFilter.Nearest
+		};
+
+		Rid sampler = Device.SamplerCreate(samplerState);
+
+		spriteUniform.AddId(sampler);
+		spriteUniform.AddId(spriteTexture);
+
 		ClearUniformSet = Device.UniformSetCreate(
-			new Godot.Collections.Array<RDUniform> { outputUniform },
+			new Godot.Collections.Array<RDUniform>
+			{
+				outputUniform,
+				spriteUniform
+			},
 			ClearShader,
 			0
 		);
